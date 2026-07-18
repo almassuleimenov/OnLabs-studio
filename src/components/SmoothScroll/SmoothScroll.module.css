@@ -1,0 +1,8 @@
+.scrollContainer {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  /* Изолируем контекст наложения, чтобы контент не перекрывал Preloader */
+  isolation: isolate; 
+  z-index: 1;
+}
