@@ -1,0 +1,65 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* Светлый фон, чтобы было видно черное "яйцо" прелоадера */
+  background-color: var(--color-bg); 
+  color: var(--color-text); /* Темный текст */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+.title {
+  font-family: "Parastoo", serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(4rem, 12vw, 14rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+}
+
+.dot {
+  /* Убрали фиолетовый цвет и свечение. Теперь точка берет цвет от родителя (.title) */
+  color: inherit; 
+  display: inline-block;
+  font-family: var(--font-space-grotesk); 
+  margin-left: 0.05em; 
+}
+
+.subtitle {
+  font-family: var(--font-space-grotesk);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 400;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.svgContainer {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  height: 300px;
+  pointer-events: none;
+}
+
+.svgPath {
+  /* Цвет пути совпадает с цветом фона Hero */
+  fill: var(--color-bg); 
+}

@@ -1,12 +1,30 @@
 .main {
-  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 2rem 5vw;
 }
 
-.heroTitle {
+.nextSection {
+  min-height: 100vh;
+  /* Темный фон для контраста с Hero */
+  background-color: var(--color-text); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 5vw;
+  position: relative;
+  z-index: 1; 
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sectionTitle {
   font-family: var(--font-fraunces);
   font-size: clamp(4rem, 10vw, 12rem);
   font-weight: 300;
@@ -14,13 +32,17 @@
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  /* Текст светлый на темном фоне */
+  color: var(--color-bg); 
 }
 
-.heroSubtitle {
+.sectionSubtitle {
   font-family: var(--font-space-grotesk);
   font-size: clamp(1rem, 2vw, 1.5rem);
   font-weight: 500;
   margin-top: 2rem;
   max-width: 500px;
   text-transform: uppercase;
+  /* Текст светлый на темном фоне */
+  color: var(--color-bg); 
 }
