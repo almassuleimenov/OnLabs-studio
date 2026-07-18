@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero/Hero";
 import styles from "./page.module.css";
+import About from "@/components/About/About";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         Светлая секция для демонстрации "отрыва" темного Hero.
         Используем твой оригинальный текст и шрифты.
       */}
+      <About />
       <section className={styles.nextSection}>
         <div className={styles.contentWrapper}>
           <h2 className={styles.sectionTitle}>
