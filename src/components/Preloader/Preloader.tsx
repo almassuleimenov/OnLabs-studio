@@ -18,7 +18,6 @@ export default function Preloader() {
   const [dimension, setDimension] = useState<Dimension>({ width: 0, height: 0 });
 
   useEffect(() => {
-    // Дебаунс здесь избыточен для одноразового прелоадера, но состояние нужно для старта GSAP
     setDimension({ width: window.innerWidth, height: window.innerHeight });
   }, []);
 
@@ -28,65 +27,50 @@ export default function Preloader() {
     const tl = gsap.timeline();
     const totalWords = wordsRef.current.length;
 
-    // 1. Анимация слов: O(N) setup, O(1) render с динамическим таймингом
+    // 1. Динамическая кривая времени для слов
     wordsRef.current.forEach((word, index) => {
-      let holdTime: number;
+      let holdTime = 0.06; // Исходная быстрая скорость
 
-      if (index === 0) {
-        holdTime = 0.8; // Стартовое слово держим дольше
-      } else if (index >= totalWords - 3) {
-        holdTime = 0.4; // Последние 3 слова - выраженное замедление
-      } else {
-        // Высчитываем прогресс от 0 до 1 для средних слов и плавно увеличиваем задержку
-        const progress = (index - 1) / (totalWords - 4);
-        holdTime = 0.06 + (progress * 0.15); // Начинается с 0.06s и замедляется до 0.21s
+      if (index >= totalWords - 3) {
+        holdTime = 0.4; // Последние 3 слова сильно замедляются
+      } else if (index > totalWords / 2) {
+        // Плавное замедление после середины списка
+        holdTime = 0.06 + ((index - (totalWords / 2)) * 0.04); 
       }
 
       tl.set(word, { visibility: "visible" })
-        .to(word, {
-          opacity: 1,
-          duration: 0.05, // Появление резкое
-        })
-        .to(word, {
-          opacity: 0,
-          duration: 0.05,
-          delay: holdTime,
-        });
+        .to(word, { opacity: 1, duration: 0.02 }) // Мгновенное появление
+        .to(word, { opacity: 0, duration: 0.02 }, `+=${holdTime}`); // Удержание и исчезновение
     });
 
-    // 2. Математика кривой Безье: создание эффекта "разорванного яйца"
+    // 2. Математика "липкого яйца" Денниса Снелленберга
     const { width, height } = dimension;
     
-    // Прямая линия внизу экрана
     const flatPath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height} 0 ${height} L0 0`;
-    // Натянутая кривая (точка тянется вверх на 600px, создавая "яйцо")
-    const eggPath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height - 600} 0 ${height} L0 0`;
+    const curvePath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height + 300} 0 ${height} L0 0`;
 
-    // Задаем исходное ровное состояние
     gsap.set(pathRef.current, { attr: { d: flatPath } });
 
-    // 3. Вытягивание вверх и распрямление
-    // Используем label "slideUp", чтобы синхронизировать движение контейнера и изгиб SVG
+    // 3. Синхронная двухфазная анимация
     tl.to(containerRef.current, {
       y: "-100vh",
-      duration: 1.2,
-      ease: "power4.inOut",
-    }, "slideUp")
+      duration: 1.0,
+      ease: "power3.inOut",
+    }, "slideUp") // Метка для синхронизации
     .to(pathRef.current, {
-      attr: { d: eggPath },
-      duration: 0.6,
-      ease: "power4.in",
-    }, "slideUp") // Кривая натягивается первую половину пути
+      attr: { d: curvePath },
+      duration: 0.5,
+      ease: "power3.in",
+    }, "slideUp") // Первая половина подъема: натягиваем яйцо вниз
     .to(pathRef.current, {
       attr: { d: flatPath },
-      duration: 0.6,
-      ease: "power4.out",
-    }, "slideUp+=0.6") // И распрямляется вторую половину
+      duration: 0.5,
+      ease: "power3.out",
+    }, "slideUp+=0.5") // Вторая половина: резко схлопываем в прямую линию
     .set(containerRef.current, { display: "none" });
 
   }, { dependencies: [dimension], scope: containerRef });
 
-  // Предотвращаем рендер кривого SVG до получения размеров окна
   if (dimension.width === 0) return null;
 
   return (

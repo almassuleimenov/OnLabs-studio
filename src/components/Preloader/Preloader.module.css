@@ -7,7 +7,7 @@
   z-index: 9999;
   background-color: #2A2529;
   color: #F3F0E7;
-  /* overflow: hidden здесь убираем, иначе изгиб яйца может обрезаться на нестандартных экранах */
+  /* Важно: никакого overflow: hidden здесь быть не должно */
 }
 
 .wordContainer {
@@ -34,7 +34,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 105vh; /* 105vh защищает от белой полосы внизу в Safari при анимации y: -100vh */
+  height: calc(100vh + 300px); /* Место для вытягивания Безье вниз */
   pointer-events: none;
   z-index: 5;
 }
