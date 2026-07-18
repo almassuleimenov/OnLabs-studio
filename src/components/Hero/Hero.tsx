@@ -58,7 +58,7 @@ export default function Hero() {
     <section ref={containerRef} className={styles.hero}>
       <div ref={textRef} className={styles.content}>
         <h1 className={styles.title}>
-          Studia 74<span className={styles.dot}>.</span>
+          On Labs<span className={styles.dot}>.</span>
         </h1>
       </div>
 
